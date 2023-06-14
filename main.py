@@ -1,39 +1,19 @@
-# This is a sample Python script.
-import pylast
+import os
 
-from api.ApiHandler import parseDates, serializeResult
-from api.myLast import getUserScrobbles
-from api.tracksAnalysis import analyzeData
+from flask import Flask, send_from_directory
+from flask_restful import Api
+from api.ApiHandler import ApiHandler
 
-
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+app = Flask(__name__, static_url_path='', static_folder='frontend')
+api = Api(app)
 
 
-def test():
-    dividers = parseDates('2018', '2018', -7200, False)
-
-    try:
-        tracks = getUserScrobbles('quelthar', dividers[0], dividers[-1])
-    except pylast.WSError as e:
-        return {
-            'result': 'FAILURE',
-            'message': e.details
-        }
-
-    res = analyzeData(dividers=dividers, tracks=tracks, is_monthly_version=False)
-
-    track_dictionary = {track.track.__str__(): track for track in tracks}
-    album_dictionary = {track.album: track for track in tracks}
-
-    ser = serializeResult(res, -7200, False, track_dictionary, album_dictionary)
-
-    print(ser)
+@app.route("/")
+def serve():
+    return send_from_directory(app.static_folder, 'index.html')
 
 
-# Press the green button in the gutter to run the script.
+api.add_resource(ApiHandler, '/api')
+
 if __name__ == '__main__':
-    test()
-
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    app.run(debug=True, port=os.getenv("PORT", default=5000))
