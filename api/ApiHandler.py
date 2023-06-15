@@ -16,7 +16,7 @@ def parseDates(_from_date, _to_date, timezone_offset, is_monthly_version):
         from_date = datetime.strptime(_from_date + ' +0000', "%Y-%m %z")
         to_date = datetime.strptime(_to_date + ' +0000', "%Y-%m %z")
     else:
-        delta = relativedelta(years=1)
+        delta = relativedelta(years=+1)
         from_date = datetime.strptime(_from_date + ' +0000', "%Y %z")
         to_date = datetime.strptime(_to_date + ' +0000', "%Y %z")
     to_date += delta
@@ -42,7 +42,8 @@ def serializeResult(data, timezone_offset, is_monthly_version, track_dictionary,
         if date.year not in years.keys():
             years[date.year] = True
             res['artist'].append({'year': date.year.__str__(), 'months': []})
-        month = {'month': date.strftime('%B') if is_monthly_version else yearly_labels[yearly_index]}
+            yearly_index = 0
+        month = {'month': date.strftime('%B') if is_monthly_version else yearly_labels[yearly_index % 5]}
         yearly_index += 1
 
         ind = 0
@@ -72,7 +73,8 @@ def serializeResult(data, timezone_offset, is_monthly_version, track_dictionary,
         if date.year not in years.keys():
             years[date.year] = True
             res['album'].append({'year': date.year.__str__(), 'months': []})
-        month = {'month': date.strftime('%B') if is_monthly_version else yearly_labels[yearly_index]}
+            yearly_index = 0
+        month = {'month': date.strftime('%B') if is_monthly_version else yearly_labels[yearly_index % 5]}
         yearly_index += 1
 
         ind = 0
@@ -105,8 +107,9 @@ def serializeResult(data, timezone_offset, is_monthly_version, track_dictionary,
         if date.year not in years.keys():
             years[date.year] = True
             res['song'].append({'year': date.year.__str__(), 'months': []})
-        month = {'month': date.strftime('%B') if is_monthly_version else yearly_labels[yearly_index]}
-        yearly_index = 0
+            yearly_index = 0
+        month = {'month': date.strftime('%B') if is_monthly_version else yearly_labels[yearly_index % 5]}
+        yearly_index += 1
 
         ind = 0
         for key, val in bucket.items():

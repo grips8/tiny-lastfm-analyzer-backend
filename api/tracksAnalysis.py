@@ -54,7 +54,7 @@ def yearlyImpl(groups):
             temp = {key: val, " ": "", "  ": "", 'timestamp': bucket}
             res['song'].append(temp)
 
-        return res
+    return res
 
 
 def analyzeData(dividers, tracks, is_monthly_version):

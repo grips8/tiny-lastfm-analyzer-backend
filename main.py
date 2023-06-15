@@ -2,9 +2,11 @@ import os
 
 from flask import Flask, send_from_directory
 from flask_restful import Api
+# from flask_cors import CORS
 from api.ApiHandler import ApiHandler
 
 app = Flask(__name__, static_url_path='', static_folder='frontend')
+# cors = CORS(app)
 api = Api(app)
 
 
